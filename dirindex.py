@@ -5,7 +5,7 @@ import os.path
 import getopt
 import magic
 
-class Template(object):
+class RowTemplate(object):
   def __init__(self, request):
     print request
     self.request = request
@@ -48,15 +48,15 @@ class ScannerOptions(object):
     
 class Scanner(object):
   def __init__(self, options):
-    self.template = None
+    self.row_template = None
     self.options = options
     self.magic_types=magic.open(magic.MAGIC_NONE)
     self.magic_types.load()
     self.magic_mime=magic.open(magic.MIME_TYPE)
     self.magic_mime.load()
   
-  def scan(self, path, template):
-    self.template = Template(template)
+  def scan(self, path, row_template):
+    self.row_template = RowTemplate(row_template)
     self.root = path
     self._scan_directory(path, 1)
 
@@ -103,7 +103,7 @@ class Scanner(object):
           if bIsDirectory:
             # Delay subfolders scan
             listDirs.append(dictDetails['PATH'])
-          self.template.write(**dictDetails)
+          self.row_template.write(**dictDetails)
       if self.options.recursive and \
         (self.options.max_depth == 0 or depth < self.options.max_depth):
         depth += 1
@@ -127,7 +127,7 @@ class Scanner(object):
     dictDetails['LINK'] = os.path.islink(sFilePath) and 'y' or 'n'
     dictDetails['HIDDEN'] = fileName[0] == '.' and 'y' or 'n'
     lSize = dictDetails['DIRECTORY'] == 'n' and os.path.getsize(sFilePath) or 0
-    if self.template.size:
+    if self.row_template.size:
       dictDetails['SIZE'] = lSize < self.options.unit and \
         '%d B' % lSize or \
         lSize / self.options.unit < self.options.unit and \
@@ -137,31 +137,31 @@ class Scanner(object):
         lSize / self.options.giga < self.options.unit and \
         '%d GB' % int(lSize / self.options.giga) or \
         '%d TB' % int(lSize / self.options.tera)
-    if self.template.sizeb:
+    if self.row_template.sizeb:
       dictDetails['SIZEB'] = lSize
-    if self.template.sizek:
+    if self.row_template.sizek:
       dictDetails['SIZEK'] = int(lSize / self.options.unit)
-    if self.template.sizem:
+    if self.row_template.sizem:
       dictDetails['SIZEM'] = int(lSize / self.options.mega)
-    if self.template.sizeg:
+    if self.row_template.sizeg:
       dictDetails['SIZEG'] = int(lSize / self.options.giga)
-    if self.template.sizet:
+    if self.row_template.sizet:
       dictDetails['SIZET'] = int(lSize / self.options.tera)
-    if self.template.type:
+    if self.row_template.type:
       dictDetails['TYPE'] = self.magic_types.file(sFilePath)
-    if self.template.mime:
+    if self.row_template.mime:
       dictDetails['MIME'] = self.magic_mime.file(sFilePath)
-    if self.template.splitl:
+    if self.row_template.splitl:
       dictDetails['SPLITL'] = fileName.split('.', 1)[0]
-    if self.template.splitr:
+    if self.row_template.splitr:
       dictDetails['SPLITR'] = '.' in fileName and \
         fileName.split('.', 1)[1] or ''
-    if self.template.rsplitl:
+    if self.row_template.rsplitl:
       dictDetails['RSPLITL'] = fileName.rsplit('.', 1)[0]
-    if self.template.rsplitr:
+    if self.row_template.rsplitr:
       dictDetails['RSPLITR'] = '.' in fileName and \
         fileName.rsplit('.', 1)[1] or ''
-    if self.template.ext:
+    if self.row_template.ext:
       dictDetails['EXT'] = '.' in fileName and fileName.count('.') and \
         fileName.rsplit('.', 1)[1] or ''
     return dictDetails
