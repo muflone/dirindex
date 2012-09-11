@@ -27,12 +27,15 @@ class Template(object):
     print(self.request.format(**args))
 
 class ScannerOptions(object):
-  def __init__(self, divider, directories_first, 
+  def __init__(self, unit, directories_first, 
     include_directories, include_files, 
     include_symlinks_directories, include_symlinks_files,
     include_hidden_directories, include_hidden_files,
     recursive, max_depth):
-    self.divider = divider
+    self.unit = unit
+    self.mega = unit ** 2
+    self.giga = unit ** 3
+    self.tera = unit ** 4
     self.directories_first = directories_first
     self.include_directories = include_directories
     self.include_files = include_files
@@ -125,25 +128,25 @@ class Scanner(object):
     dictDetails['HIDDEN'] = fileName[0] == '.' and 'y' or 'n'
     lSize = dictDetails['DIRECTORY'] == 'n' and os.path.getsize(sFilePath) or 0
     if self.template.size:
-      dictDetails['SIZE'] = lSize < self.options.divider and \
+      dictDetails['SIZE'] = lSize < self.options.unit and \
         '%d B' % lSize or \
-        lSize / self.options.divider < self.options.divider and \
-        '%d KB' % int(lSize / self.options.divider) or \
-        lSize / self.options.divider ** 2 < self.options.divider and \
-        '%d MB' % int(lSize / self.options.divider ** 2) or \
-        lSize / self.divider ** 3 < self.options.divider and \
-        '%d GB' % int(lSize / self.options.divider ** 3) or \
-        '%d TB' % int(lSize / self.options.divider ** 4)
+        lSize / self.options.unit < self.options.unit and \
+        '%d KB' % int(lSize / self.options.unit) or \
+        lSize / self.options.mega < self.options.unit and \
+        '%d MB' % int(lSize / self.options.mega) or \
+        lSize / self.options.giga < self.options.unit and \
+        '%d GB' % int(lSize / self.options.giga) or \
+        '%d TB' % int(lSize / self.options.tera)
     if self.template.sizeb:
       dictDetails['SIZEB'] = lSize
     if self.template.sizek:
-      dictDetails['SIZEK'] = int(lSize / self.options.divider)
+      dictDetails['SIZEK'] = int(lSize / self.options.unit)
     if self.template.sizem:
-      dictDetails['SIZEM'] = int(lSize / self.options.divider ** 2)
+      dictDetails['SIZEM'] = int(lSize / self.options.mega)
     if self.template.sizeg:
-      dictDetails['SIZEG'] = int(lSize / self.options.divider ** 3)
+      dictDetails['SIZEG'] = int(lSize / self.options.giga)
     if self.template.sizet:
-      dictDetails['SIZET'] = int(lSize / self.options.divider ** 4)
+      dictDetails['SIZET'] = int(lSize / self.options.tera)
     if self.template.type:
       dictDetails['TYPE'] = self.magic_types.file(sFilePath)
     if self.template.mime:
@@ -164,7 +167,7 @@ class Scanner(object):
     return dictDetails
 
 if __name__=='__main__':
-  options = ScannerOptions(divider=1024, directories_first=True,
+  options = ScannerOptions(unit=1024, directories_first=True,
     include_directories=True, include_files=True,
     include_symlinks_directories=True, include_symlinks_files=True,
     include_hidden_directories=False, include_hidden_files=False,
