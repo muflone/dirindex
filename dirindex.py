@@ -62,7 +62,7 @@ class ScannerOptions(object):
     include_directories, include_files, 
     include_symlinks_directories, include_symlinks_files,
     include_hidden_directories, include_hidden_files,
-    recursive, max_depth, index_name, overwrite,
+    recursive, max_depth, index_name, omit_index_listing, overwrite,
     write_to_stdout, localtime, timeformat):
     self.unit = unit
     self.mega = unit ** 2
@@ -78,6 +78,7 @@ class ScannerOptions(object):
     self.max_depth = max_depth
     self.recursive = self.max_depth != 1 and recursive or False
     self.index_name = index_name
+    self.omit_index_listing = omit_index_listing
     self.overwrite = overwrite
     self.write_to_stdout = write_to_stdout
     self.localtime = localtime
@@ -151,30 +152,33 @@ class Scanner(object):
     # Write result to file or stdout
     file_output = OutputFile(self.template, path,
       self.options.write_to_stdout and '-' or self.options.index_name)
-    dictDirDetails = self._get_dir_details(path, parent_dir, depth)
+    dictDirDetails = self._get_dir_details(os.path.basename(path), parent_dir, depth)
     # Write header for folder
     file_output.write_header(**dictDirDetails)
     listDirs = []
     #try:
     if 1==1:
-      for fileName in listItems:
+      for filename in listItems:
         # Scan every item inside the directory
-        bInclude = True
-        dictFileDetails = self._get_file_details(path, fileName, depth)
+        bExclude = False
+        dictFileDetails = self._get_file_details(path, filename, depth)
         bIsDirectory = dictFileDetails['DIRECTORY'] == 'y'
+        # Skip index if requested
+        if filename == self.options.index_name and self.options.omit_index_listing:
+          bExclude = True
         # Skip symlinks if not requested
         if dictFileDetails['LINK'] == 'y':
           if bIsDirectory and not self.options.include_symlinks_directories:
-            bInclude = False
+            bExclude = True
           if not bIsDirectory and not self.options.include_symlinks_files:
-            bInclude = False
+            bExclude = True
         # Skip hidden files/directories if not requested
         if dictFileDetails['HIDDEN'] == 'y':
           if bIsDirectory and not self.options.include_hidden_directories:
-            bInclude = False
+            bExclude = True
           if not bIsDirectory and not self.options.include_hidden_files:
-            bInclude = False
-        if bInclude:
+            bExclude = True
+        if not bExclude:
           if bIsDirectory:
             # Delay subfolders scan
             listDirs.append(dictFileDetails['FULLPATH'])
@@ -185,19 +189,20 @@ class Scanner(object):
         (self.options.max_depth == 0 or depth < self.options.max_depth):
         depth += 1
         for subdir in listDirs:
-          self._scan_directory(subdir, parent_dir, depth)
+          self._scan_directory(subdir, path, depth)
     #except:
     #  print('ERROR')
     # Write footer for folder
     file_output.write_footer(**dictDirDetails)
 
-  def _get_dir_details(self, path, dirName, depth):
-    sDirPath = os.path.join(path, dirName)
+  def _get_dir_details(self, dirname, path, depth):
+    dirpath = os.path.join(path, dirname)
     return {
-      'NAME': dirName,
+      'NAME': dirname,
       'PARENT': path,
-      'PATH': os.path.relpath(sDirPath, self.root_dir),
-      'FULLPATH': sDirPath
+      'PATH': os.path.relpath(dirpath, self.root_dir),
+      'FULLPATH': dirpath,
+      'DEPTH': depth
     }
 
   def _get_file_details(self, path, fileName, depth):
@@ -279,7 +284,8 @@ if __name__=='__main__':
     include_symlinks_directories=True, include_symlinks_files=True,
     include_hidden_directories=False, include_hidden_files=False,
     recursive=True, max_depth=0,
-    index_name='index.html', overwrite=False, write_to_stdout=True,
+    index_name='index.html', omit_index_listing=True, overwrite=False,
+    write_to_stdout=True,
     localtime=True, timeformat='%Y-%m-%d %H:%M'
   )
   template = Template(
