@@ -149,13 +149,9 @@ class Scanner(object):
     if self.abort:
       return
 
-    # Write result to file or stdout
-    file_output = OutputFile(self.template, path,
-      self.options.write_to_stdout and '-' or self.options.index_name)
-    dictDirDetails = self._get_dir_details(os.path.basename(path), parent_dir, depth)
-    # Write header for folder
-    file_output.write_header(**dictDirDetails)
     listDirs = []
+    listFiles = []
+    index = 0
     #try:
     if 1==1:
       for filename in listItems:
@@ -179,30 +175,48 @@ class Scanner(object):
           if not bIsDirectory and not self.options.include_hidden_files:
             bExclude = True
         if not bExclude:
+          # Add INDEX field
+          index += 1
+          dictFileDetails['INDEX'] = index
+          # Append file details to files list
+          listFiles.append(dictFileDetails)
           if bIsDirectory:
             # Delay subfolders scan
             listDirs.append(dictFileDetails['FULLPATH'])
-          # Write row for file
-          file_output.write_rowset(**dictFileDetails)
+
+      # Write result to file or stdout
+      file_output = OutputFile(self.template, path,
+        self.options.write_to_stdout and '-' or self.options.index_name)
+      dictDirDetails = self._get_dir_details(os.path.basename(path), parent_dir,
+        depth, len(listFiles))
+      # Write header for folder
+      file_output.write_header(**dictDirDetails)
+      for item in listFiles:
+        # Add COUNT field
+        item['COUNT'] = len(listFiles)
+        # Write row for file
+        file_output.write_rowset(**item)
+      # Write footer for folder
+      file_output.write_footer(**dictDirDetails)
+        
       # Scan subfolders
       if self.options.recursive and \
         (self.options.max_depth == 0 or depth < self.options.max_depth):
         depth += 1
-        for subdir in listDirs:
-          self._scan_directory(subdir, path, depth)
+        for item in listDirs:
+          self._scan_directory(item, path, depth)
     #except:
     #  print('ERROR')
-    # Write footer for folder
-    file_output.write_footer(**dictDirDetails)
 
-  def _get_dir_details(self, dirname, path, depth):
+  def _get_dir_details(self, dirname, path, depth, count):
     dirpath = os.path.join(path, dirname)
     return {
       'NAME': dirname,
       'PARENT': path,
       'PATH': os.path.relpath(dirpath, self.root_dir),
       'FULLPATH': dirpath,
-      'DEPTH': depth
+      'DEPTH': depth,
+      'COUNT': count
     }
 
   def _get_file_details(self, path, fileName, depth):
