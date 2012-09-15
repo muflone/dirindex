@@ -1,7 +1,7 @@
 dirindex
-A Python script which creates an HTML index starting from a directory.
+A Python script that creates an HTML index starting from a directory.
 
-Copyright 2012 Muflone <muflone(at)vbsimple(dot)net>
+Copyright 2012 Muflone (muflone(at)vbsimple(dot)net)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
