@@ -1,0 +1,7 @@
+				<tr class="fileentry">
+					<td class="row1">
+						<img alt="file" class="sprite s_page_white_code" src="http://www.dropbox.com/static/images/icons/icon_spacer.gif" style="vertical-align:middle;"/> <a href="{NAME}">{NAME}</a>
+					</td>
+					<td class="row2">{SIZE}</td>
+					<td class="row3">DATE</td>
+				</tr>
