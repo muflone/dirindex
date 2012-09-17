@@ -216,7 +216,8 @@ class Scanner(object):
       'PATH': os.path.relpath(dirpath, self.root_dir),
       'FULLPATH': dirpath,
       'DEPTH': depth,
-      'COUNT': count
+      'COUNT': count,
+      'INDEX': 0
     }
 
   def _get_file_details(self, path, fileName, depth):
@@ -230,6 +231,10 @@ class Scanner(object):
     dictDetails['PATH'] = os.path.relpath(sFilePath, self.root_dir)
     dictDetails['FULLPATH'] = sFilePath
     dictDetails['DEPTH'] = depth
+    # INDEX and COUNT placeholders, they will be set later after the scan
+    # to properly set them if the file has to be skipped
+    dictDetails['INDEX'] = 0
+    dictDetails['COUNT'] = 0
     # Obtain file attributes
     is_directory = os.path.isdir(sFilePath)
     dictDetails['DIRECTORY'] = is_directory and 'y' or 'n'
