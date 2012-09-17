@@ -58,8 +58,8 @@ class OutputFile(object):
     self._write(self.template.request_footer.format(**args))
 
 class ScannerOptions(object):
-  def __init__(self, unit, directories_first, 
-    include_directories, include_files, 
+  def __init__(self, unit, directories_first,
+    exclude_directories, exclude_files,
     include_symlinks_directories, include_symlinks_files,
     include_hidden_directories, include_hidden_files,
     recursive, max_depth, index_name, omit_index_listing, overwrite,
@@ -69,8 +69,8 @@ class ScannerOptions(object):
     self.giga = unit ** 3
     self.tera = unit ** 4
     self.directories_first = directories_first
-    self.include_directories = include_directories
-    self.include_files = include_files
+    self.exclude_directories = exclude_directories
+    self.exclude_files = exclude_files
     self.include_symlinks_directories = include_symlinks_directories
     self.include_symlinks_files = include_symlinks_files
     self.include_hidden_directories = include_hidden_directories
@@ -124,10 +124,10 @@ class Scanner(object):
       listDirs.sort()
       listFiles.sort()
     # Filter for directories
-    if self.options.include_directories:
+    if not self.options.exclude_directories:
       listItems = listDirs
     # Filter for files
-    if self.options.include_files:
+    if not self.options.exclude_files:
       listItems.extend(listFiles)
     if not self.options.directories_first:
       # Sort files and directories together
@@ -294,7 +294,7 @@ class Scanner(object):
 
 if __name__=='__main__':
   options = ScannerOptions(unit=1024, directories_first=True,
-    include_directories=True, include_files=True,
+    exclude_directories=False, exclude_files=False,
     include_symlinks_directories=True, include_symlinks_files=True,
     include_hidden_directories=False, include_hidden_files=False,
     recursive=True, max_depth=0,
