@@ -1,0 +1,13 @@
+        </tbody>
+
+        <tfoot id="maintablefoot">
+          <tr id="footrowhr"><th colspan="3"><hr/></th></tr>
+          <tr>
+            <th id="lastmodifiedth">Index file generated on {NOW} with <a href="https://github.com/muflone/dirindex">{APPNAME}</a> v{VERSION}</th>
+            <th colspan="2"><p id="foot_logo">&copy; 2012 Muflone</p></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </center></body>
+</html>
