@@ -154,12 +154,11 @@ class ScannerOptions(object):
     # Check for template existance
     for templates in ('', 'templates', os.path.join(DATADIR, 'templates')):
       if os.path.isdir(os.path.join(templates, args.template)):
-        templatepath = os.path.join(templates, args.template)
+        self.template = os.path.join(templates, args.template)
         break
     else:
       parser.exit(message='The specified template was not found.\n')
     # TODO: allow default settings in the template
-    self.template = templatepath
     self.index = args.index
     self.path = args.path
     self.unit = args.unit
