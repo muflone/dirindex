@@ -24,6 +24,7 @@ import magic
 import time
 import argparse
 import sys
+import ConfigParser
 
 CFILES = 'files'
 CDIRS = 'dirs'
@@ -33,18 +34,24 @@ DATADIR = os.path.join(sys.prefix, 'share', 'dirindex')
 
 class Template(object):
   def __init__(self, template):
-    header = os.path.join(template, 'header.txt')
-    rowfile = os.path.join(template, 'rowfile.txt')
-    rowdir = os.path.join(template, 'rowdir.txt')
-    footer = os.path.join(template, 'footer.txt')
-    with open(header, 'r') as f:
-      self.request_header = f.read()
-    with open(rowfile, 'r') as f:
-      self.request_rowfile = f.read()
-    with open(rowdir, 'r') as f:
-      self.request_rowdir = f.read()
-    with open(footer, 'r') as f:
-      self.request_footer = f.read()
+    def read_file_template(option, defaultfile):
+      # Read filename from the config and read its content
+      FILES_SECTION = 'FILES'
+      if config.has_section(FILES_SECTION):
+        filename = config.get(FILES_SECTION, option, defaultfile)
+      if not filename:
+        filename = defaultfile
+      # Read content of the file
+      with open(os.path.join(template, filename), 'r') as f:
+        return f.read()
+    # Read configuration file
+    config = ConfigParser.ConfigParser()
+    config.read([os.path.join(template, 'template.ini')])
+    # Read content from the file obtained in the configuration file
+    self.request_header = read_file_template('header', 'header.txt')
+    self.request_footer = read_file_template('footer', 'footer.txt')
+    self.request_rowfile = read_file_template('rowfile', 'rowfile.txt')
+    self.request_rowdir = read_file_template('rowdir', 'rowdir.txt')
     # Define shortcuts for template requests
     request_rowset = '%s %s' % (self.request_rowfile, self.request_rowdir)
     self.size    = '{SIZE}'    in request_rowset
