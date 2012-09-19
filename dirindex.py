@@ -122,6 +122,7 @@ class ScannerOptions(object):
       parser.exit(message='The specified path is not a directory.\n')
 
     # FIXME: add check for template existance
+    # TODO: allow default settings in the template
     self.template = args.template
     self.index = args.index
     self.path = args.path
@@ -211,6 +212,7 @@ class Scanner(object):
     listDirs = []
     listFiles = []
     index = 0
+    # FIXME: create a better error handling
     #try:
     if 1==1:
       for filename in listItems:
@@ -296,18 +298,24 @@ class Scanner(object):
     dictDetails['COUNT'] = 0
     # Obtain file attributes
     is_directory = os.path.isdir(sFilePath)
+    # TODO: define format for DIRECTORY field in template
     dictDetails['DIRECTORY'] = is_directory and 'y' or 'n'
+    # TODO: define format for LINK field in template
     dictDetails['LINK'] = os.path.islink(sFilePath) and 'y' or 'n'
+    # TODO: define format for HIDDEN field in template
     dictDetails['HIDDEN'] = fileName[0] == '.' and 'y' or 'n'
     # Obtain the filesize
     if is_directory:
       # It's a directory
       lSize = 0
+      # TODO: allow to define directories SIZE field in template
       dictDetails['SIZE'] = ''
     else:
       # It's a file
       lSize = os.path.getsize(sFilePath)
       if self.template.size:
+        # TODO: define KB/MB/GB/TB constants in template
+        # TODO: define format for SIZE field in template
         dictDetails['SIZE'] = lSize < self.options.unit and \
           '%d bytes' % lSize or \
           lSize / self.options.unit < self.options.unit and \
