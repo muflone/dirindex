@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 ##
 #       Project : dirindex
+#       Version : 0.1
 #   Description : A tool to create an HTML index starting from a directory.
 #        Author : Muflone <muflone@vbsimple.net>
 #     Copyright : 2012 Fabio Castelli
@@ -25,6 +26,7 @@ import argparse
 
 CFILES = 'files'
 CDIRS = 'dirs'
+VERSION = '0.1'
 
 class Template(object):
   def __init__(self, template):
@@ -91,6 +93,9 @@ class ScannerOptions(object):
       help='Index filename')
     parser.add_argument('path'             , action='store', type=str,
       help='Directory to scan for files or directories')
+    parser.add_argument('-V', '--version'  , action='version',
+      help='Display the program version number and exit',
+      version='%(prog)s ' + VERSION)
     parser.add_argument('-u', '--unit'     , action='store', type=int,
       help='Unit for size, use 1000 for KB or 1024 for KiB',
       default=1024)
