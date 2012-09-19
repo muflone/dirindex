@@ -1,7 +1,0 @@
-				</tbody>
-			</table>
-		</div>
-	</center>
-	
-	</body>
-</html>
