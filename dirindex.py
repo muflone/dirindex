@@ -3,12 +3,18 @@
 
 import os
 import os.path
-import getopt
 import magic
 import time
+import argparse
+
+CFILES = 'files'
+CDIRS = 'dirs'
 
 class Template(object):
-  def __init__(self, header, rowset, footer):
+  def __init__(self, template):
+    header = 'templates/%s/header.txt' % template
+    rowset = 'templates/%s/row.txt' % template
+    footer = 'templates/%s/footer.txt' % template
     with open(header, 'r') as f:
       self.request_header = f.read()
     with open(rowset, 'r') as f:
@@ -58,31 +64,78 @@ class OutputFile(object):
     self._write(self.template.request_footer.format(**args))
 
 class ScannerOptions(object):
-  def __init__(self, unit, directories_first,
-    exclude_directories, exclude_files,
-    include_symlinks_directories, include_symlinks_files,
-    include_hidden_directories, include_hidden_files,
-    recursive, max_depth, index_name, omit_index_listing, overwrite,
-    write_to_stdout, localtime, timeformat):
-    self.unit = unit
-    self.mega = unit ** 2
-    self.giga = unit ** 3
-    self.tera = unit ** 4
-    self.directories_first = directories_first
-    self.exclude_directories = exclude_directories
-    self.exclude_files = exclude_files
-    self.include_symlinks_directories = include_symlinks_directories
-    self.include_symlinks_files = include_symlinks_files
-    self.include_hidden_directories = include_hidden_directories
-    self.include_hidden_files = include_hidden_files
-    self.max_depth = max_depth
-    self.recursive = self.max_depth != 1 and recursive or False
-    self.index_name = index_name
-    self.omit_index_listing = omit_index_listing
-    self.overwrite = overwrite
-    self.write_to_stdout = write_to_stdout
-    self.localtime = localtime
-    self.timeformat = timeformat
+  def __init__(self):
+    choicesfd = (CFILES, CDIRS)
+    parser = argparse.ArgumentParser(add_help=True,
+      usage='%(prog)s [options] TEMPLATE INDEX PATH',
+      description='Create an index file of files or directories')
+    parser.add_argument('template'         , action='store', type=str,
+      help='Template for index')
+    parser.add_argument('index'            , action='store', type=str,
+      help='Index filename')
+    parser.add_argument('path'             , action='store', type=str,
+      help='Directory to scan for files or directories')
+    parser.add_argument('-u', '--unit'     , action='store', type=int,
+      help='Unit for size, use 1000 for KB or 1024 for KiB',
+      default=1024)
+    parser.add_argument('-f', '--dirfirst' , action='store_true',
+      help='Put directories first, then all available files')
+
+    group = parser.add_argument_group(title='Time and date')
+    group.add_argument('-l', '--localtime', action='store_true',
+      help='Use localtime instead of UTC')
+    group.add_argument('-d', '--datefmt'  , action='store', type=str,
+      help='Date format as used by strftime (see man strftime)',
+      default='%Y-%m-%d %H:%M')
+
+    group = parser.add_argument_group(title='Inclusions and exclusions')
+    group.add_argument('-X', '--exclude'  , action='append',
+      help='Exclude files or directories from the scan',
+      choices=choicesfd)
+    group.add_argument('-H', '--hidden'   , action='append',
+      help='Include hidden files or directories from the scan',
+      choices=choicesfd)
+    group.add_argument('-L', '--links'    , action='append',
+      help='Include symlinks files or directories from the scan',
+      choices=choicesfd)
+
+    group = parser.add_argument_group(title='Recursion')
+    group.add_argument('-r', '--recursive', action='store_true',
+      help='Scan directories recursively')
+    group.add_argument('-m', '--maxdepth' , action='store', dest='depth', type=int,
+      help='Descend at most DEPTH levels of directories below',
+      default=0)
+
+    group = parser.add_argument_group(title='Index options')
+    group.add_argument('-O', '--omitindex', action='store_true',
+      help='Omit the index file from the file listing')
+    group.add_argument('-o', '--overwrite', action='store_true',
+      help='Overwrite existing index files without confirmation')
+    group.add_argument('-s', '--stdout'   , action='store_true',
+      help='Write to standard output instead of index file')
+    args = parser.parse_args()
+
+    self.template = args.template
+    self.index = args.index
+    self.path = args.path
+    self.unit = args.unit
+    self.mega = args.unit ** 2
+    self.giga = args.unit ** 3
+    self.tera = args.unit ** 4
+    self.directories_first = args.dirfirst
+    self.exclude_directories = args.exclude and CDIRS in args.exclude or False
+    self.exclude_files = args.exclude and CFILES in args.exclude or False
+    self.include_symlinks_directories = args.links and CDIRS in args.links or False
+    self.include_symlinks_files = args.links and CFILES in args.links or False
+    self.include_hidden_directories = args.hidden and CDIRS in args.hidden or False
+    self.include_hidden_files = args.hidden and CFILES in args.hidden or False
+    self.maxdepth = args.depth
+    self.recursive = args.depth != 1 and args.recursive or False
+    self.omit_index_listing = args.omitindex
+    self.overwrite = args.overwrite
+    self.write_to_stdout = args.stdout
+    self.localtime = args.localtime
+    self.dateformat = args.datefmt
     
 class Scanner(object):
   def __init__(self, options):
@@ -94,19 +147,19 @@ class Scanner(object):
     self.magic_mime.load()
     self.abort = False
 
-  def scan(self, path, template):
+  def scan(self, template):
     self.template = template
     self.abort = False
-    self.root_dir = os.path.dirname(path)
+    self.root_dir = os.path.dirname(self.options.path)
     # Define time format functions for local or GMT time
     if self.options.localtime:
       self.getstrftime = lambda ftime: \
-        time.strftime(self.options.timeformat, time.localtime(ftime))
+        time.strftime(self.options.dateformat, time.localtime(ftime))
     else:
       self.getstrftime = lambda ftime: \
-        time.strftime(self.options.timeformat, time.gmtime(ftime))
+        time.strftime(self.options.dateformat, time.gmtime(ftime))
     # Launch scan
-    self._scan_directory(path, os.path.dirname(path), 1)
+    self._scan_directory(self.options.path, os.path.dirname(self.options.path), 1)
     # Cancelled scan
     if self.abort:
       print 'Procedure aborted'
@@ -133,7 +186,7 @@ class Scanner(object):
       # Sort files and directories together
       listItems.sort()
     # Creates index file
-    index_path = os.path.join(path, self.options.index_name)
+    index_path = os.path.join(path, self.options.index)
     if os.path.exists(index_path) and not self.options.overwrite and \
       not self.options.write_to_stdout:
       # Handle existing index file
@@ -160,7 +213,7 @@ class Scanner(object):
         dictFileDetails = self._get_file_details(path, filename, depth)
         bIsDirectory = dictFileDetails['DIRECTORY'] == 'y'
         # Skip index if requested
-        if filename == self.options.index_name and self.options.omit_index_listing:
+        if filename == self.options.index and self.options.omit_index_listing:
           bExclude = True
         # Skip symlinks if not requested
         if dictFileDetails['LINK'] == 'y':
@@ -186,7 +239,7 @@ class Scanner(object):
 
       # Write result to file or stdout
       file_output = OutputFile(self.template, path,
-        self.options.write_to_stdout and '-' or self.options.index_name)
+        self.options.write_to_stdout and '-' or self.options.index)
       dictDirDetails = self._get_dir_details(os.path.basename(path), parent_dir,
         depth, len(listFiles))
       # Write header for folder
@@ -201,7 +254,7 @@ class Scanner(object):
         
       # Scan subfolders
       if self.options.recursive and \
-        (self.options.max_depth == 0 or depth < self.options.max_depth):
+        (self.options.maxdepth == 0 or depth < self.options.maxdepth):
         depth += 1
         for item in listDirs:
           self._scan_directory(item, path, depth)
@@ -288,7 +341,7 @@ class Scanner(object):
       dictDetails['EXT'] = '.' in fileName and fileName.count('.') and \
         fileName.rsplit('.', 1)[1] or ''
     # Obtain creation, modification and access time,
-    # which will be formatted using the timeformat
+    # which will be formatted using the dateformat
     if self.template.ctime:
       dictDetails['CTIME'] = self.getstrftime(os.path.getctime(sFilePath))
     if self.template.mtime:
@@ -298,18 +351,7 @@ class Scanner(object):
     return dictDetails
 
 if __name__=='__main__':
-  options = ScannerOptions(unit=1024, directories_first=True,
-    exclude_directories=False, exclude_files=False,
-    include_symlinks_directories=True, include_symlinks_files=True,
-    include_hidden_directories=False, include_hidden_files=False,
-    recursive=True, max_depth=0,
-    index_name='index.html', omit_index_listing=True, overwrite=False,
-    write_to_stdout=True,
-    localtime=True, timeformat='%Y-%m-%d %H:%M'
-  )
-  template = Template(
-    'templates/stdout/header.txt',
-    'templates/stdout/row.txt',
-    'templates/stdout/footer.txt')
+  options = ScannerOptions()
+  template = Template(options.template)
   scanner = Scanner(options)
-  scanner.scan(os.path.expanduser('~/Prova'), template)
+  scanner.scan(template)
