@@ -26,6 +26,7 @@ import argparse
 
 CFILES = 'files'
 CDIRS = 'dirs'
+APPNAME = 'dirindex'
 VERSION = '0.2'
 
 class Template(object):
@@ -101,7 +102,7 @@ class ScannerOptions(object):
       help='Directory to scan for files or directories')
     parser.add_argument('-V', '--version'  , action='version',
       help='Display the program version number and exit',
-      version='%(prog)s ' + VERSION)
+      version='%s %s' % (APPNAME, VERSION))
     parser.add_argument('-u', '--unit'     , action='store', type=int,
       help='Unit for size, use 1000 for KB or 1024 for KiB',
       default=1024)
@@ -192,6 +193,7 @@ class Scanner(object):
     else:
       self.getstrftime = lambda ftime: \
         time.strftime(self.options.dateformat, time.gmtime(ftime))
+    self.now = self.getstrftime(None)
     # Launch scan
     self._scan_directory(self.options.path, os.path.dirname(self.options.path), 1)
     # Cancelled scan
@@ -309,7 +311,10 @@ class Scanner(object):
       'FULLPATH': dirpath,
       'DEPTH': depth,
       'COUNT': count,
-      'ROWNR': 0
+      'ROWNR': 0,
+      'NOW': self.now,
+      'APPNAME': APPNAME,
+      'VERSION': VERSION
     }
 
   def _get_file_details(self, path, fileName, depth):
@@ -328,6 +333,11 @@ class Scanner(object):
     # to properly set them if the file has to be skipped
     dictDetails['ROWNR'] = 0
     dictDetails['COUNT'] = 0
+    # Scan date and time
+    dictDetails['NOW'] = self.now
+    # App version number
+    dictDetails['APPNAME'] = APPNAME
+    dictDetails['VERSION'] = VERSION
     # Obtain file attributes
     is_directory = os.path.isdir(sFilePath)
     # TODO: define format for DIRECTORY field in template
