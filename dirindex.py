@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##
 #       Project : dirindex
-#       Version : 0.1
+#       Version : 0.2
 #   Description : A tool to create an HTML index starting from a directory.
 #        Author : Muflone <muflone@vbsimple.net>
 #     Copyright : 2012 Fabio Castelli
@@ -26,7 +26,7 @@ import argparse
 
 CFILES = 'files'
 CDIRS = 'dirs'
-VERSION = '0.1'
+VERSION = '0.2'
 
 class Template(object):
   def __init__(self, template):
@@ -232,7 +232,7 @@ class Scanner(object):
 
     listDirs = []
     listFiles = []
-    index = 0
+    rownr = 0
     # FIXME: create a better error handling
     #try:
     if 1==1:
@@ -257,9 +257,9 @@ class Scanner(object):
           if not bIsDirectory and not self.options.include_hidden_files:
             bExclude = True
         if not bExclude:
-          # Add INDEX field
-          index += 1
-          dictFileDetails['INDEX'] = index
+          # Add ROWNR field
+          rownr += 1
+          dictFileDetails['ROWNR'] = rownr
           # Append file details to files list
           listFiles.append(dictFileDetails)
           if bIsDirectory:
@@ -299,7 +299,7 @@ class Scanner(object):
       'FULLPATH': dirpath,
       'DEPTH': depth,
       'COUNT': count,
-      'INDEX': 0
+      'ROWNR': 0
     }
 
   def _get_file_details(self, path, fileName, depth):
@@ -313,9 +313,9 @@ class Scanner(object):
     dictDetails['PATH'] = os.path.relpath(sFilePath, self.root_dir)
     dictDetails['FULLPATH'] = sFilePath
     dictDetails['DEPTH'] = depth
-    # INDEX and COUNT placeholders, they will be set later after the scan
+    # ROWNR and COUNT placeholders, they will be set later after the scan
     # to properly set them if the file has to be skipped
-    dictDetails['INDEX'] = 0
+    dictDetails['ROWNR'] = 0
     dictDetails['COUNT'] = 0
     # Obtain file attributes
     is_directory = os.path.isdir(sFilePath)
