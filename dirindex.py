@@ -121,6 +121,7 @@ class ScannerOptions(object):
     if not os.path.isdir(args.path):
       parser.exit(message='The specified path is not a directory.\n')
 
+    # FIXME: add check for template existance
     self.template = args.template
     self.index = args.index
     self.path = args.path
@@ -144,17 +145,16 @@ class ScannerOptions(object):
     self.dateformat = args.datefmt
     
 class Scanner(object):
-  def __init__(self, options):
-    self.template = None
+  def __init__(self, options, template):
     self.options = options
+    self.template = template
     self.magic_types=magic.open(magic.MAGIC_NONE)
     self.magic_types.load()
     self.magic_mime=magic.open(magic.MIME_TYPE)
     self.magic_mime.load()
     self.abort = False
 
-  def scan(self, template):
-    self.template = template
+  def scan(self):
     self.abort = False
     self.root_dir = os.path.dirname(self.options.path)
     # Define time format functions for local or GMT time
@@ -359,5 +359,5 @@ class Scanner(object):
 if __name__=='__main__':
   options = ScannerOptions()
   template = Template(options.template)
-  scanner = Scanner(options)
-  scanner.scan(template)
+  scanner = Scanner(options, template)
+  scanner.scan()
