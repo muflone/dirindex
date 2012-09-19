@@ -53,23 +53,24 @@ class Template(object):
     self.request_rowfile = read_file_template('rowfile', 'rowfile.txt')
     self.request_rowdir = read_file_template('rowdir', 'rowdir.txt')
     # Define shortcuts for template requests
-    request_rowset = '%s %s' % (self.request_rowfile, self.request_rowdir)
-    self.size    = '{SIZE}'    in request_rowset
-    self.sizeb   = '{SIZEB}'   in request_rowset
-    self.sizek   = '{SIZEK}'   in request_rowset
-    self.sizem   = '{SIZEM}'   in request_rowset
-    self.sizeg   = '{SIZEG}'   in request_rowset
-    self.sizet   = '{SIZET}'   in request_rowset
-    self.type    = '{TYPE}'    in request_rowset
-    self.mime    = '{MIME}'    in request_rowset
-    self.splitl  = '{SPLITL}'  in request_rowset
-    self.splitr  = '{SPLITR}'  in request_rowset
-    self.rsplitl = '{RSPLITL}' in request_rowset
-    self.rsplitr = '{RSPLITR}' in request_rowset
-    self.ext     = '{EXT}'     in request_rowset
-    self.ctime   = '{CTIME}'   in request_rowset
-    self.mtime   = '{MTIME}'   in request_rowset
-    self.atime   = '{ATIME}'   in request_rowset
+    requests = '%s %s %s %s' % (self.request_header, self.request_footer,
+      self.request_rowfile, self.request_rowdir)
+    self.size    = '{SIZE}'    in requests
+    self.sizeb   = '{SIZEB}'   in requests
+    self.sizek   = '{SIZEK}'   in requests
+    self.sizem   = '{SIZEM}'   in requests
+    self.sizeg   = '{SIZEG}'   in requests
+    self.sizet   = '{SIZET}'   in requests
+    self.type    = '{TYPE}'    in requests
+    self.mime    = '{MIME}'    in requests
+    self.splitl  = '{SPLITL}'  in requests
+    self.splitr  = '{SPLITR}'  in requests
+    self.rsplitl = '{RSPLITL}' in requests
+    self.rsplitr = '{RSPLITR}' in requests
+    self.ext     = '{EXT}'     in requests
+    self.ctime   = '{CTIME}'   in requests
+    self.mtime   = '{MTIME}'   in requests
+    self.atime   = '{ATIME}'   in requests
 
 class OutputFile(object):
   def __init__(self, template, path, index_name):
