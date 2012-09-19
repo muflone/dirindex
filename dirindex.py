@@ -31,31 +31,35 @@ VERSION = '0.2'
 class Template(object):
   def __init__(self, template):
     header = 'templates/%s/header.txt' % template
-    rowset = 'templates/%s/row.txt' % template
+    rowfile = 'templates/%s/rowfile.txt' % template
+    rowdir = 'templates/%s/rowdir.txt' % template
     footer = 'templates/%s/footer.txt' % template
     with open(header, 'r') as f:
       self.request_header = f.read()
-    with open(rowset, 'r') as f:
-      self.request_rowset = f.read()
+    with open(rowfile, 'r') as f:
+      self.request_rowfile = f.read()
+    with open(rowdir, 'r') as f:
+      self.request_rowdir = f.read()
     with open(footer, 'r') as f:
       self.request_footer = f.read()
     # Define shortcuts for template requests
-    self.size = '{SIZE}' in self.request_rowset
-    self.sizeb = '{SIZEB}' in self.request_rowset
-    self.sizek = '{SIZEK}' in self.request_rowset
-    self.sizem = '{SIZEM}' in self.request_rowset
-    self.sizeg = '{SIZEG}' in self.request_rowset
-    self.sizet = '{SIZET}' in self.request_rowset
-    self.type = '{TYPE}' in self.request_rowset
-    self.mime = '{MIME}' in self.request_rowset
-    self.splitl = '{SPLITL}' in self.request_rowset
-    self.splitr = '{SPLITR}' in self.request_rowset
-    self.rsplitl = '{RSPLITL}' in self.request_rowset
-    self.rsplitr = '{RSPLITR}' in self.request_rowset
-    self.ext = '{EXT}' in self.request_rowset
-    self.ctime = '{CTIME}' in self.request_rowset
-    self.mtime = '{MTIME}' in self.request_rowset
-    self.atime = '{ATIME}' in self.request_rowset
+    request_rowset = '%s %s' % (self.request_rowfile, self.request_rowdir)
+    self.size    = '{SIZE}'    in request_rowset
+    self.sizeb   = '{SIZEB}'   in request_rowset
+    self.sizek   = '{SIZEK}'   in request_rowset
+    self.sizem   = '{SIZEM}'   in request_rowset
+    self.sizeg   = '{SIZEG}'   in request_rowset
+    self.sizet   = '{SIZET}'   in request_rowset
+    self.type    = '{TYPE}'    in request_rowset
+    self.mime    = '{MIME}'    in request_rowset
+    self.splitl  = '{SPLITL}'  in request_rowset
+    self.splitr  = '{SPLITR}'  in request_rowset
+    self.rsplitl = '{RSPLITL}' in request_rowset
+    self.rsplitr = '{RSPLITR}' in request_rowset
+    self.ext     = '{EXT}'     in request_rowset
+    self.ctime   = '{CTIME}'   in request_rowset
+    self.mtime   = '{MTIME}'   in request_rowset
+    self.atime   = '{ATIME}'   in request_rowset
 
 class OutputFile(object):
   def __init__(self, template, path, index_name):
@@ -76,8 +80,10 @@ class OutputFile(object):
       self.file_output.write(data)
   def write_header(self, **args):
     self._write(self.template.request_header.format(**args))
-  def write_rowset(self, **args):
-    self._write(self.template.request_rowset.format(**args))
+  def write_rowfile(self, **args):
+    self._write(self.template.request_rowfile.format(**args))
+  def write_rowdir(self, **args):
+    self._write(self.template.request_rowdir.format(**args))
   def write_footer(self, **args):
     self._write(self.template.request_footer.format(**args))
 
@@ -276,8 +282,12 @@ class Scanner(object):
       for item in listFiles:
         # Add COUNT field
         item['COUNT'] = len(listFiles)
-        # Write row for file
-        file_output.write_rowset(**item)
+        if item['DIRECTORY'] == 'y':
+          # Write row for directory
+          file_output.write_rowdir(**item)
+        else:
+          # Write row for file
+          file_output.write_rowfile(**item)
       # Write footer for folder
       file_output.write_footer(**dictDirDetails)
         
@@ -313,6 +323,7 @@ class Scanner(object):
     dictDetails['PATH'] = os.path.relpath(sFilePath, self.root_dir)
     dictDetails['FULLPATH'] = sFilePath
     dictDetails['DEPTH'] = depth
+    dictDetails['INDEX'] = self.options.index
     # ROWNR and COUNT placeholders, they will be set later after the scan
     # to properly set them if the file has to be skipped
     dictDetails['ROWNR'] = 0
