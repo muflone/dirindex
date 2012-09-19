@@ -123,9 +123,9 @@ class ScannerOptions(object):
     group = parser.add_argument_group(title='Recursion')
     group.add_argument('-r', '--recursive', action='store_true',
       help='Scan directories recursively')
-    group.add_argument('-m', '--maxdepth' , action='store', dest='depth', type=int,
+    group.add_argument('-m', '--maxdepth' , action='store', type=int,
       help='Descend at most DEPTH levels of directories below',
-      default=0)
+      dest='depth', default=0)
 
     group = parser.add_argument_group(title='Index options')
     group.add_argument('-O', '--omitindex', action='store_true',
