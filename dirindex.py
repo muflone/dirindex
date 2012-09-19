@@ -23,18 +23,20 @@ import os.path
 import magic
 import time
 import argparse
+import sys
 
 CFILES = 'files'
 CDIRS = 'dirs'
 APPNAME = 'dirindex'
 VERSION = '0.2'
+DATADIR = 'share/dirindex'
 
 class Template(object):
   def __init__(self, template):
-    header = 'templates/%s/header.txt' % template
-    rowfile = 'templates/%s/rowfile.txt' % template
-    rowdir = 'templates/%s/rowdir.txt' % template
-    footer = 'templates/%s/footer.txt' % template
+    header = os.path.join(template, 'header.txt')
+    rowfile = os.path.join(template, 'rowfile.txt')
+    rowdir = os.path.join(template, 'rowdir.txt')
+    footer = os.path.join(template, 'footer.txt')
     with open(header, 'r') as f:
       self.request_header = f.read()
     with open(rowfile, 'r') as f:
@@ -149,9 +151,15 @@ class ScannerOptions(object):
     if not os.path.isdir(args.path):
       parser.exit(message='The specified path is not a directory.\n')
 
-    # FIXME: add check for template existance
+    # Check for template existance
+    for templates in ('', 'templates', os.path.join(sys.prefix, DATADIR, 'templates')):
+      if os.path.isdir(os.path.join(templates, args.template)):
+        templatepath = os.path.join(templates, args.template)
+        break
+    else:
+      parser.exit(message='The specified template was not found.\n')
     # TODO: allow default settings in the template
-    self.template = args.template
+    self.template = templatepath
     self.index = args.index
     self.path = args.path
     self.unit = args.unit
