@@ -402,8 +402,9 @@ class Scanner(object):
       dictDetails['RSPLITR'] = '.' in fileName and \
         fileName.rsplit('.', 1)[1] or ''
     if self.template.ext:
-      dictDetails['EXT'] = '.' in fileName and fileName.count('.') and \
-        fileName.rsplit('.', 1)[1] or ''
+      #dictDetails['EXT'] = '.' in fileName and fileName.count('.') and \
+      #  fileName.rsplit('.', 1)[1] or ''
+      dictDetails['EXT'] = os.path.splitext(fileName)[1]
     # Obtain creation, modification and access time,
     # which will be formatted using the dateformat
     if self.template.ctime:
