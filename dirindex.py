@@ -115,6 +115,12 @@ class ScannerOptions(object):
       help='Write to standard output instead of index file')
     args = parser.parse_args()
 
+    # Check for path existance
+    if not os.path.exists(args.path):
+      parser.exit(message='The specified path does not exist.\n')
+    if not os.path.isdir(args.path):
+      parser.exit(message='The specified path is not a directory.\n')
+
     self.template = args.template
     self.index = args.index
     self.path = args.path
