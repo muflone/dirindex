@@ -1,7 +1,7 @@
           <tr class="ifOpened">
             <td style="cursor:default" class="vt"><img src="https://raw.github.com/muflone/dirindex/master/templates/googlecode/document.png" height="16" width="16"></td>
             <td class="vt col_0" nowrap="nowrap"><a href="{NAME}">{NAME}</a></td>
-            <td style="cursor:text" class="vt col_1">{DESCRIPTION}&nbsp;</td>
+            <td style="cursor:text" class="vt col_1">{TYPE}&nbsp;</td>
             <td style="cursor:text; text-align:right" class="vt col_2" nowrap="nowrap">{SIZE}</td>
             <td style="cursor:text; text-align:right" class="vt col_3" nowrap="nowrap">{MTIME}</td>
           </tr>
