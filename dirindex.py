@@ -31,7 +31,7 @@ CDIRS = 'dirs'
 APPNAME = 'dirindex'
 VERSION = '0.3.0'
 DATADIR = os.path.join(sys.prefix, 'share', 'dirindex')
-TEMPLATE_PATHS = ('', 'templates', os.path.join(DATADIR, 'templates'))
+TEMPLATE_PATHS = ('.', 'templates', os.path.join(DATADIR, 'templates'))
 
 class Template(object):
   def __init__(self, template):
@@ -97,10 +97,27 @@ class Template(object):
     self.ctime   = '{CTIME}'   in requests
     self.mtime   = '{MTIME}'   in requests
     self.atime   = '{ATIME}'   in requests
+
   @classmethod
   def is_valid_template(classname, path):
+    # Check if the specified path is a valid template
     return os.path.isdir(path) and os.path.isfile(os.path.join(path, 'template.ini'))
-    
+
+  @classmethod
+  def list_templates(classname):
+    # List all available templates in path
+    available_templates = {}
+    for template_path in TEMPLATE_PATHS:
+      # Skip nonexistent path
+      if os.path.exists(template_path):
+        for template in os.listdir(template_path):
+          if classname.is_valid_template(os.path.join(template_path, template)):
+            # Skip the templates already found in previous paths
+            # The first found template has always the precedence
+            if not available_templates.has_key(template):
+              # Save the template and its path where it's found
+              available_templates[template] = template_path
+    return available_templates
 
 class OutputFile(object):
   def __init__(self, template, path, index_name):
@@ -147,7 +164,8 @@ class ScannerOptions(object):
 
     group = parser.add_argument_group(title='Template')
     group.add_argument('-t', '--template' , action='store', type=str,
-      help='Template for index filename',
+      help='Template for creating the index. Specify a valid path or use ' \
+      'LIST to get all the available templates in the search path',
       required=True)
 
     group = parser.add_argument_group(title='Index options')
@@ -194,13 +212,23 @@ class ScannerOptions(object):
     if not os.path.isdir(args.path):
       parser.exit(message='The specified path is not a directory.\n')
 
-    # Check for template existance
-    for template_path in TEMPLATE_PATHS:
-      if Template.is_valid_template(os.path.join(template_path, args.template)):
-        self.template = os.path.join(template_path, args.template)
-        break
+    # List all available templates
+    avail_templates = Template.list_templates()
+    if args.template.lower() == 'list':
+      # Return a list of valid templates
+      parser.exit(message='The following templates were detected: %s\n' % 
+        ', '.join(avail_templates.iterkeys()))
     else:
-      parser.exit(message='The specified template was not found.\n')
+      # Use the specified template
+      # Check for template existance
+      if Template.is_valid_template(args.template):
+        # Search a valid template by using its pathname
+        self.template = args.template
+      elif avail_templates.has_key(args.template):
+        # Search a valid template in the detected templates by using its name
+        self.template = os.path.join(avail_templates[args.template], args.template)
+      else:
+        parser.exit(message='The specified template was not found.\n')
     # TODO: allow default settings in the template
     self.index = args.index
     self.path = args.path
@@ -462,8 +490,8 @@ class Scanner(object):
 if __name__=='__main__':
   options = ScannerOptions()
   template = Template(options.template)
-  print 'Using template %s (%s) from %s\nURL: %s\nScreenshot: %s' % (
-    template.name, template.description, template.author,
+  print 'Using template %s (%s) by %s\nFrom: %s\nURL: %s\nScreenshot: %s' % (
+    template.name, template.description, template.author, template.template,
     template.url, template.screenshot)
   template.load()
   scanner = Scanner(options, template)
