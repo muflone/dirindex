@@ -1,0 +1,6 @@
+                        <tr class="">
+                          <td class="icon"><img src="https://raw.github.com/muflone/dirindex/master/templates/github/document.png" width="16" height="16"></td>
+                          <td class="content"><a href="{NAME}" class="js-slide-to js-rewrite-sha">{NAME}</a></td>
+                          <td class="message">{SIZE}</td>
+                          <td class="age"><time class="js-relative-date">{MTIME}</time></td>
+                        </tr>
