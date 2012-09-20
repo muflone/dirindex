@@ -1,0 +1,19 @@
+        </tbody>
+      </table>
+
+      <div class="list-foot">Index file generated on {NOW} with <a href="https://github.com/muflone/dirindex">{APPNAME}</a> v{VERSION}&nbsp;<div class="pagination">{COUNT} items</div></div>
+    </div>
+  </div>
+
+  <div id="footer" dir="ltr">
+    <div class="text">
+      <a href="https://code.google.com/projecthosting/terms.html">Terms</a> -
+      <a href="http://www.google.com/privacy.html">Privacy</a> -
+      <a href="https://code.google.com/p/support/">Project Hosting Help</a>
+    </div>
+  </div>
+
+  <div class="hostedBy" style="margin-top: -20px;">
+    <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+  </div>
+</body></html>

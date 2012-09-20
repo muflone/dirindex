@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head>
+  <title>{PATH} - Content of folder {NAME}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link type="text/css" rel="stylesheet" href="https://ssl.gstatic.com/codesite/ph/16186173366037945081/css/core.css">
+</head>
+<body class="t2">
+  <div class="headbg">
+    <!--[if lte IE 7]>
+      <div style="text-align:center;">
+        Your version of Internet Explorer is not supported. Try a browser that
+        contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+        <a href="http://www.google.com/chrome">Google Chrome</a>, or
+        <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+      </div>
+    <![endif]-->
+
+    <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" itemscope="" itemtype="http://schema.org/CreativeWork" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr style="height: 58px;">
+          <td id="plogo">
+            <link itemprop="url" href="https://code.google.com/p/kosciak-misc">
+            <a href="https://code.google.com/p/kosciak-misc/"><img src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png" alt="Logo" itemprop="image"></a>
+          </td>
+          <td style="padding-left: 0.5em">
+            <div id="pname"><span itemprop="name">{PATH}</span></div>
+            <div id="psum"><span itemprop="description">Content of folder {NAME}</span></div>
+          </td>
+          <td style="white-space:nowrap;text-align:right; vertical-align:bottom;">
+            <form action="https://code.google.com/hosting/search">
+              <input size="30" name="q" type="text">
+              <input name="projectsearch" value="Search projects" type="submit">
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="maincol">
+    <div id="colcontrol">
+      <table class="results" id="resultstable" cellpadding="2" cellspacing="0" width="100%" border="0">
+        <thead>
+          <tr>
+            <th style="border-left: 0">&nbsp;</th>
+            <th class="col_0" nowrap="nowrap" width="30%">Filename</th>
+            <th class="col_1" nowrap="nowrap" width="50%">Description</th>
+            <th style="text-align:right" class="col_2" nowrap="nowrap" width="10%">Size</th>
+            <th style="text-align:right" class="col_3" nowrap="nowrap" width="10%">Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
