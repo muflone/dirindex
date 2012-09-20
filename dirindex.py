@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##
 #       Project : dirindex
-#       Version : 0.2.2
+#       Version : 0.3.0
 #   Description : A tool to create an HTML index starting from a directory.
 #        Author : Muflone <muflone@vbsimple.net>
 #     Copyright : 2012 Fabio Castelli
@@ -29,29 +29,54 @@ import ConfigParser
 CFILES = 'files'
 CDIRS = 'dirs'
 APPNAME = 'dirindex'
-VERSION = '0.2.2'
+VERSION = '0.3.0'
 DATADIR = os.path.join(sys.prefix, 'share', 'dirindex')
 
 class Template(object):
   def __init__(self, template):
-    def read_file_template(option, defaultfile):
-      # Read filename from the config and read its content
-      FILES_SECTION = 'FILES'
-      if config.has_section(FILES_SECTION):
-        filename = config.get(FILES_SECTION, option, defaultfile)
-      if not filename:
-        filename = defaultfile
-      # Read content of the file
-      with open(os.path.join(template, filename), 'r') as f:
-        return f.read()
+    self.template = template
     # Read configuration file
-    config = ConfigParser.ConfigParser()
-    config.read([os.path.join(template, 'template.ini')])
-    # Read content from the file obtained in the configuration file
-    self.request_header = read_file_template('header', 'header.txt')
-    self.request_footer = read_file_template('footer', 'footer.txt')
-    self.request_rowfile = read_file_template('rowfile', 'rowfile.txt')
-    self.request_rowdir = read_file_template('rowdir', 'rowdir.txt')
+    self.config = ConfigParser.ConfigParser()
+    self.config.read([os.path.join(self.template, 'template.ini')])
+    # Get files from template
+    self.file_header = self.get_file_from_config('header', 'header.txt')
+    self.file_footer = self.get_file_from_config('footer', 'footer.txt')
+    self.file_rowfile = self.get_file_from_config('rowfile', 'rowfile.txt')
+    self.file_rowdir = self.get_file_from_config('rowdir', 'rowdir.txt')
+    GENERAL_SECTION = 'GENERAL'
+    if self.config.has_section(GENERAL_SECTION):
+      # Read template information in GENERAL section
+      self.name = self.config.get(GENERAL_SECTION, 'name', '')
+      self.description = self.config.get(GENERAL_SECTION, 'description', '')
+      self.author = self.config.get(GENERAL_SECTION, 'author', '')
+      self.url = self.config.get(GENERAL_SECTION, 'url', '')
+      self.screenshot = self.config.get(GENERAL_SECTION, 'screenshot', '')
+    else:
+      # No GENERAL section found
+      self.name, self.description, self.author, self.url, self.screenshot = \
+      ['unknown'] * 5
+
+  def get_file_from_config(self, option, defaultfile):
+    # Read filename from the config and read its content
+    FILES_SECTION = 'FILES'
+    if self.config.has_section(FILES_SECTION):
+      filename = self.config.get(FILES_SECTION, option, defaultfile)
+    # If not specified use the default filename
+    if not filename:
+      filename = defaultfile
+    return filename
+
+  def load(self):
+    # Read content of the files obtained from the configuration file
+    with open(os.path.join(self.template, self.file_header), 'r') as f:
+      self.request_header = f.read()
+    with open(os.path.join(self.template, self.file_footer), 'r') as f:
+      self.request_footer = f.read()
+    with open(os.path.join(self.template, self.file_rowfile), 'r') as f:
+      self.request_rowfile = f.read()
+    with open(os.path.join(self.template, self.file_rowdir), 'r') as f:
+      self.request_rowdir = f.read()
+
     # Define shortcuts for template requests
     requests = '%s %s %s %s' % (self.request_header, self.request_footer,
       self.request_rowfile, self.request_rowdir)
@@ -102,12 +127,8 @@ class ScannerOptions(object):
   def __init__(self):
     choicesfd = (CFILES, CDIRS)
     parser = argparse.ArgumentParser(add_help=True,
-      usage='%(prog)s [options] TEMPLATE INDEX PATH',
+      usage='%(prog)s [options] -t TEMPLATE -i INDEX PATH',
       description='Create an index file of files or directories')
-    parser.add_argument('template'         , action='store', type=str,
-      help='Template for index')
-    parser.add_argument('index'            , action='store', type=str,
-      help='Index filename')
     parser.add_argument('path'             , action='store', type=str,
       help='Directory to scan for files or directories')
     parser.add_argument('-V', '--version'  , action='version',
@@ -118,6 +139,22 @@ class ScannerOptions(object):
       default=1024)
     parser.add_argument('-f', '--dirfirst' , action='store_true',
       help='Put directories first, then all available files')
+
+    group = parser.add_argument_group(title='Template')
+    group.add_argument('-t', '--template' , action='store', type=str,
+      help='Template for index filename',
+      required=True)
+
+    group = parser.add_argument_group(title='Index options')
+    group.add_argument('-i', '--index'    , action='store', type=str,
+      help='Index filename',
+      required=True)
+    group.add_argument('-O', '--omitindex', action='store_true',
+      help='Omit the index file from the file listing')
+    group.add_argument('-o', '--overwrite', action='store_true',
+      help='Overwrite existing index files without confirmation')
+    group.add_argument('-s', '--stdout'   , action='store_true',
+      help='Write to standard output instead of index file')
 
     group = parser.add_argument_group(title='Time and date')
     group.add_argument('-l', '--localtime', action='store_true',
@@ -144,13 +181,6 @@ class ScannerOptions(object):
       help='Descend at most DEPTH levels of directories below',
       dest='depth', default=0)
 
-    group = parser.add_argument_group(title='Index options')
-    group.add_argument('-O', '--omitindex', action='store_true',
-      help='Omit the index file from the file listing')
-    group.add_argument('-o', '--overwrite', action='store_true',
-      help='Overwrite existing index files without confirmation')
-    group.add_argument('-s', '--stdout'   , action='store_true',
-      help='Write to standard output instead of index file')
     args = parser.parse_args()
 
     # Check for path existance
@@ -425,5 +455,9 @@ class Scanner(object):
 if __name__=='__main__':
   options = ScannerOptions()
   template = Template(options.template)
+  print 'Using template %s (%s) from %s\nURL: %s\nScreenshot: %s' % (
+    template.name, template.description, template.author,
+    template.url, template.screenshot)
+  template.load()
   scanner = Scanner(options, template)
   scanner.scan()
