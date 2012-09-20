@@ -22,7 +22,7 @@
           </a>
 
           <div class="topsearch command-bar-activated">
-            <form accept-charset="UTF-8" action="/search" class="command_bar_form" id="top_search_form" method="get">
+            <form accept-charset="UTF-8" action="http://www.github.com/search" class="command_bar_form" id="top_search_form" method="get">
               <input type="text" name="q" id="command-bar" placeholder="Search or Type a Command" />
               <input type="hidden" name="type" value="Everything" />
               <input type="hidden" name="repo" value="" />
