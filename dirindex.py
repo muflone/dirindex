@@ -191,7 +191,8 @@ class ScannerOptions(object):
 
     # Check for template existance
     for templates in ('', 'templates', os.path.join(DATADIR, 'templates')):
-      if os.path.isdir(os.path.join(templates, args.template)):
+      if os.path.isdir(os.path.join(templates, args.template)) and \
+        os.path.isfile(os.path.join(templates, args.template, 'template.ini')):
         self.template = os.path.join(templates, args.template)
         break
     else:
