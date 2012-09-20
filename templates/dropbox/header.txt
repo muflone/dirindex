@@ -1,19 +1,40 @@
 <!DOCTYPE html>
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>Dropbox - Condivisa - Simplify your life</title>
-  <link href="http://www.dropbox.com/static/33324/images/favicon.ico" rel="shortcut icon">
-  <link href="http://www.dropbox.com/static/_edtQn6hmmsJlh8g-/css/main.css" type="text/css" rel="stylesheet">
-</head>
-<body style="min-height: 915px;" class="en shmodel-body file-preview-body nonempty-folder gecko">
-  <div id="shmodel-content-area">
-    <div id="content-wrapper">
-      <div id="top-bar"><h3 id="folder-title" class="shmodel-filename">{PATH}</h3></div>
-      <div style="" id="list-view-container" class="gallery-view-section">
-        <div id="list-view-header" class="list-view-cols clearfix">
-          <div class="filename-col">Name</div>
-          <div class="filesize-col">Size</div>
-          <div class="modified-col">Modified</div>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Dropbox - Condivisa - Simplify your life</title>
+    <link href="http://www.dropbox.com/static/33324/images/favicon.ico" rel="shortcut icon">
+    <link href="http://www.dropbox.com/static/_edtQn6hmmsJlh8g-/css/main.css" type="text/css" rel="stylesheet">
+  </head>
+  <body style="min-height: 915px;" class="en shmodel-body file-preview-body nonempty-folder gecko">
+    <div id="outer-frame">
+      <div id="page-content">
+        <div class="nav-header">
+          <a href="https://www.dropbox.com/referrals/NTE4OTMxMDgyOQ" target="_top" class="logo">
+            <img src="http://www.dropbox.com/static/33324/images/new_logo_shmodel_2x.png" alt="Dropbox" class="big" />
+            <img src="http://www.dropbox.com/static/33324/images/new_logo_shmodel.png" alt="Dropbox" class="small" />
+          </a>
+          <div class="filename shmodel-filename"><span id="emsnippet-c73c29e09b6c7cfc"></span></div>
+          <div class="buttons">
+            <a href="https://www.dropbox.com/referrals/NTE4OTMxMDgyOQ" target="_blank" class="freshbutton-blue">Download Dropbox</a>
+            <div id="account-header">
+              <ul class="nav">
+                <li>
+                  <div id="top-login-wrapper">
+                    <a href="https://www.dropbox.com/login" id="login-hover-link"><img src="http://www.dropbox.com/static/images/icons/icon_spacer.gif" style="" class="link-img sprite sprite_web s_web_door_in link-img" />Sign in<img src="/static/images/icons/icon_spacer.gif" style="padding: 0; margin-left: 2px; margin-top: -1px;" class="link-img sprite sprite_web s_web_login_arrow link-img" id="login-hover-dropdown-icon" /></a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <ol class="browse-files gallery-list-view">
+        <div id="shmodel-content-area">
+          <div id="content-wrapper">
+            <div id="top-bar"><h3 id="folder-title" class="shmodel-filename">{PATH}</h3></div>
+            <div style="" id="list-view-container" class="gallery-view-section">
+              <div id="list-view-header" class="list-view-cols clearfix">
+                <div class="filename-col">Name</div>
+                <div class="filesize-col">Size</div>
+                <div class="modified-col">Modified</div>
+              </div>
+              <ol class="browse-files gallery-list-view">

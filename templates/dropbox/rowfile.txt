@@ -1,11 +1,12 @@
-          <li class="browse-file list-view-cols">
-            <div class="filename-col">
-              <a href="{NAME}" class="thumb-link">
-                <img src="http://www.dropbox.com/static/images/icons/icon_spacer.gif" class="icon sprite sprite_web s_web_page_white_32 icon">
-              </a>
-              <div class="filename"><a href="{NAME}" class="filename-link">{NAME}</a></div>
-            </div>
-            <div class="filesize-col"><span class="size">{SIZE}</span></div>
-            <div class="modified-col"><span><span class="modified-time">{MTIME}</span></span></div>
-            <br class="clear">
-          </li>
+                <li class="browse-file list-view-cols">
+                  <div class="filename-col">
+                    <a href="{NAME}" class="thumb-link">
+                      <img src="http://www.dropbox.com/static/images/icons/icon_spacer.gif" class="icon sprite sprite_web s_web_page_white_32 icon">
+                    </a>
+                    <div class="filename"><a href="{NAME}" class="filename-link">{NAME}</a></div>
+                  </div>
+                  <div class="filesize-col"><span class="size">{SIZE}</span></div>
+                  <div class="modified-col"><span><span class="modified-time">{MTIME}</span></span></div>
+                  <br class="clear">
+                </li>
+      
