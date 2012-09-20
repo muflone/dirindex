@@ -96,6 +96,10 @@ class Template(object):
     self.ctime   = '{CTIME}'   in requests
     self.mtime   = '{MTIME}'   in requests
     self.atime   = '{ATIME}'   in requests
+  @classmethod
+  def is_valid_template(classname, path):
+    return os.path.isdir(path) and os.path.isfile(os.path.join(path, 'template.ini'))
+    
 
 class OutputFile(object):
   def __init__(self, template, path, index_name):
@@ -191,8 +195,7 @@ class ScannerOptions(object):
 
     # Check for template existance
     for templates in ('', 'templates', os.path.join(DATADIR, 'templates')):
-      if os.path.isdir(os.path.join(templates, args.template)) and \
-        os.path.isfile(os.path.join(templates, args.template, 'template.ini')):
+      if Template.is_valid_template(os.path.join(templates, args.template)):
         self.template = os.path.join(templates, args.template)
         break
     else:
