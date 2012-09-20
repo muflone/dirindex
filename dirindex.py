@@ -374,6 +374,8 @@ class Scanner(object):
     dictDetails['FULLPATH'] = sFilePath
     dictDetails['DEPTH'] = depth
     dictDetails['INDEX'] = self.options.index
+    # DESCRIPTION field placeholder
+    dictDetails['DESCRIPTION'] = ''
     # ROWNR and COUNT placeholders, they will be set later after the scan
     # to properly set them if the file has to be skipped
     dictDetails['ROWNR'] = 0
