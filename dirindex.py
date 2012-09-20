@@ -31,6 +31,7 @@ CDIRS = 'dirs'
 APPNAME = 'dirindex'
 VERSION = '0.3.0'
 DATADIR = os.path.join(sys.prefix, 'share', 'dirindex')
+TEMPLATE_PATHS = ('', 'templates', os.path.join(DATADIR, 'templates'))
 
 class Template(object):
   def __init__(self, template):
@@ -194,9 +195,9 @@ class ScannerOptions(object):
       parser.exit(message='The specified path is not a directory.\n')
 
     # Check for template existance
-    for templates in ('', 'templates', os.path.join(DATADIR, 'templates')):
-      if Template.is_valid_template(os.path.join(templates, args.template)):
-        self.template = os.path.join(templates, args.template)
+    for template_path in TEMPLATE_PATHS:
+      if Template.is_valid_template(os.path.join(template_path, args.template)):
+        self.template = os.path.join(template_path, args.template)
         break
     else:
       parser.exit(message='The specified template was not found.\n')
