@@ -19,8 +19,7 @@
       <tbody>
         <tr style="height: 58px;">
           <td id="plogo">
-            <link itemprop="url" href="https://code.google.com/p/kosciak-misc">
-            <a href="https://code.google.com/p/kosciak-misc/"><img src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png" alt="Logo" itemprop="image"></a>
+            <a href="https://code.google.com/"><img src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png" alt="Logo" itemprop="image"></a>
           </td>
           <td style="padding-left: 0.5em">
             <div id="pname"><span itemprop="name">{PATH}</span></div>
