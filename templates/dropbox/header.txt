@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Dropbox - Condivisa - Simplify your life</title>
+  <link href="http://www.dropbox.com/static/33324/images/favicon.ico" rel="shortcut icon">
+  <link href="http://www.dropbox.com/static/_edtQn6hmmsJlh8g-/css/main.css" type="text/css" rel="stylesheet">
+</head>
+<body style="min-height: 915px;" class="en shmodel-body file-preview-body nonempty-folder gecko">
+  <div id="shmodel-content-area">
+    <div id="content-wrapper">
+      <div id="top-bar"><h3 id="folder-title" class="shmodel-filename">{PATH}</h3></div>
+      <div style="" id="list-view-container" class="gallery-view-section">
+        <div id="list-view-header" class="list-view-cols clearfix">
+          <div class="filename-col">Name</div>
+          <div class="filesize-col">Size</div>
+          <div class="modified-col">Modified</div>
+        </div>
+        <ol class="browse-files gallery-list-view">
