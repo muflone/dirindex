@@ -1,0 +1,7 @@
+            <tr class="even">
+              <td><img src="https://raw.github.com/muflone/dirindex/master/templates/archlinux/folder.png" height="16" width="16"></td>
+              <td><a href="{NAME}/{INDEX}">{NAME}</a></td>
+              <td class="wrap">FOLDER</td>
+              <td style="text-align: right;">{SIZE}</td>
+              <td>{MTIME}</td>
+            </tr>

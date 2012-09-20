@@ -1,0 +1,13 @@
+          </tbody>
+        </table>
+        <div class="pkglist-stats" align="right"><br />Index file generated on {NOW} with <a href="https://github.com/muflone/dirindex">{APPNAME}</a> v{VERSION}&nbsp;</div>
+      </div><!-- #pkglist-results -->
+
+      <div id="footer">
+        <p>Copyright © 2002-2012 <a href="mailto:jvinet@zeroflux.org" title="Contact Judd Vinet">Judd Vinet</a> and <a href="mailto:aaron@archlinux.org" title="Contact Aaron Griffin">Aaron Griffin</a>.</p>
+        <p>The Arch Linux name and logo are recognized <a href="https://wiki.archlinux.org/index.php/DeveloperWiki:TrademarkPolicy" title="Arch Linux Trademark Policy">trademarks</a>. Some rights reserved.</p>
+        <p>The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis.</p>
+      </div>
+    </div>
+  </body>
+</html>

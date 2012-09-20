@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arch Linux - Content of {NAME}</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" type="image/x-icon" href="http://www.archlinux.org/static/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.archlinux.org/static/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="http://www.archlinux.org/static/archweb.css" media="screen, projection">
+    <link rel="stylesheet" type="text/css" href="http://www.archlinux.org/static/archweb-print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="http://www.archlinux.org/static/archnavbar/archnavbar.css">
+    <link rel="stylesheet" type="text/css" href="http://www.archlinux.org/static/admin/css/widgets.css">
+  </head>
+  <body class="">
+    <div id="archnavbar">
+      <div id="archnavbarlogo"><h1><a href="https://www.archlinux.org/" title="Return to the main page">Arch Linux</a></h1></div>
+      <div id="archnavbarmenu">
+        <ul id="archnavbarlist">
+          <li><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+          <li><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+          <li><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+          <li><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+          <li><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+          <li><a href="https://aur.archlinux.org/" title="Arch Linux User Repository">AUR</a></li>
+          <li><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+      <div id="archdev-navbar"></div>
+      <div id="pkglist-results" class="box">
+        <div class="pkglist-stats">
+          <p>Folder <b>{PATH}</b> ({COUNT} items found)</p>
+        </div>
+
+        <table class="results">
+          <thead>
+            <tr>
+              <th width="16">&nbsp;</th>
+              <th width="30%">Name</th>
+              <th width="60%">Description</th>
+              <th width="10%" style="text-align: right;">Size</th>
+              <th width="10%">Date</th>
+            </tr>
+          </thead>
+          <tbody>

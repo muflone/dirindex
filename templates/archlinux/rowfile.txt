@@ -1,0 +1,7 @@
+            <tr class="odd">
+              <td><img src="https://raw.github.com/muflone/dirindex/master/templates/archlinux/document.png" height="16" width="16"></td>
+              <td><a href="{NAME}">{NAME}</a></td>
+              <td class="wrap">{TYPE}</td>
+              <td style="text-align: right;">{SIZE}</td>
+              <td>{MTIME}</td>
+            </tr>
