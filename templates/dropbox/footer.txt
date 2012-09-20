@@ -1,5 +1,6 @@
               </ol>
             </div>
+            <div align="right">Index file generated on {NOW} with <a href="https://github.com/muflone/dirindex">{APPNAME}</a> v{VERSION}&nbsp;</div>
           </div>
         </div>
       </div>
