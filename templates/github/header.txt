@@ -54,7 +54,7 @@
           <div id="js-repo-pjax-container" data-pjax-container="">
             <div id="slider">
               <div class="breadcrumb" data-path="/">
-                <b itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">{PATH}</span></b> / 
+                <b itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">{PATH}</span></b>
               </div>
 
               <div class="frames">
