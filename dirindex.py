@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##
 #       Project : dirindex
-#       Version : 0.3.0
+#       Version : 0.3.1
 #   Description : A tool to create an HTML index starting from a directory.
 #        Author : Muflone <muflone@vbsimple.net>
 #     Copyright : 2012 Fabio Castelli
@@ -29,7 +29,7 @@ import ConfigParser
 CFILES = 'files'
 CDIRS = 'dirs'
 APPNAME = 'dirindex'
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 DATADIR = os.path.join(sys.prefix, 'share', 'dirindex')
 TEMPLATE_PATHS = ('.', 'templates', os.path.join(DATADIR, 'templates'))
 
