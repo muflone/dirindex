@@ -207,6 +207,8 @@ class ScannerOptions(object):
     args = parser.parse_args()
 
     # Check for path existance
+    if args.path.endswith('/'):
+      args.path = args.path[:-1]
     if not os.path.exists(args.path):
       parser.exit(message='The specified path does not exist.\n')
     if not os.path.isdir(args.path):
@@ -384,7 +386,7 @@ class Scanner(object):
     dirpath = os.path.join(path, dirname)
     return {
       'NAME': dirname,
-      'PARENT': path,
+      'PARENT': os.path.basename(path),
       'PATH': os.path.relpath(dirpath, self.root_dir),
       'FULLPATH': dirpath,
       'DEPTH': depth,
@@ -401,7 +403,7 @@ class Scanner(object):
     # Obtain file paths
     dictDetails = {}
     dictDetails['NAME'] = fileName
-    dictDetails['PARENT'] = path
+    dictDetails['PARENT'] = os.path.basename(path)
     #dictDetails['PATH'] = sFilePath[len(self.root_dir) + 1:]
     dictDetails['PATH'] = os.path.relpath(sFilePath, self.root_dir)
     dictDetails['FULLPATH'] = sFilePath
